@@ -2,6 +2,7 @@ package model
 
 import (
 	"database/sql"
+	"fmt"
 	"strings"
 	"time"
 )
@@ -53,6 +54,17 @@ func InsertAllowedUsers(db *sql.DB, postID, authorID string, allowedUsers []stri
 		if err != nil {
 			continue
 		}
+		var isFollower int
+		err = db.QueryRow(`
+            SELECT 1 
+            FROM followers
+            WHERE follower_id = ? AND user_id = ?`,
+			uid, authorID).Scan(&isFollower)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		fmt.Println(isFollower)
 		_, err = db.Exec(`
 			INSERT INTO allowed_followers (user_id, post_id, allowed_user_id)
 			VALUES (?, ?, ?)`, authorID, postID, uid)
@@ -133,16 +145,16 @@ func GetPostsByUser(db *sql.DB, authUserID, userID string, offset, limit int) ([
 	LIMIT ? OFFSET ?;
 `
 
-rows, err = db.Query(
-	query,
-	authUserID,
-	userID,      
-	authUserID,  
-	authUserID,  
-	authUserID,   
-	authUserID,  
-	limit, offset,
-)
+		rows, err = db.Query(
+			query,
+			authUserID,
+			userID,
+			authUserID,
+			authUserID,
+			authUserID,
+			authUserID,
+			limit, offset,
+		)
 	}
 
 	if err != nil {
