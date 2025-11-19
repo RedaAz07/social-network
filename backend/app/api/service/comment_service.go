@@ -14,7 +14,7 @@ import (
 )
 
 func CreateComment(userID, postID, content, whatis, groupID string, mediaFileHeader map[string]interface{}) (string, string, error) {
-	const maxFileSize = 1 * 1024 * 1024 * 1024 // 1 GB
+	const maxFileSize = 10  * 1024 * 1024 // 1
 	if postID == "" {
 		return "", "", errors.New("missing post ID")
 	}
@@ -48,7 +48,7 @@ func CreateComment(userID, postID, content, whatis, groupID string, mediaFileHea
 		ext := strings.ToLower(filepath.Ext(filename))
 		allowedExts := map[string]bool{
 			".jpg": true, ".jpeg": true, ".png": true, ".gif": true,
-			".mp4": true, ".mov": true, ".avi": true, "webp": true,
+			".mp4": true, ".mov": true, ".avi": true, ".webm" :true, "webp":true,
 		}
 		if !allowedExts[ext] {
 			return "", "", errors.New("unsupported media format")

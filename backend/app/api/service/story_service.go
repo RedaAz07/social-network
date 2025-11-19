@@ -49,12 +49,12 @@ func FetchStories(authUserID string, db *sql.DB) ([]map[string]interface{}, erro
 	return FormatStories(stories), nil
 }
 
-func CreateStory(userID, content, bgColor string, imageFile io.ReadCloser, filename string) (string, error) {
+func CreateStory(userID, content, bgColor string, imageFile io.ReadCloser, filename string ,size int64) (string, error) {
 	content = strings.TrimSpace(content)
 	if bgColor == "" {
 		bgColor = "#000000"
 	}
-
+	const maxFileSize = 1024 * 1024 * 2
 	if content == "" && imageFile == nil {
 		return "", fmt.Errorf("either content or image must be provided")
 	}
@@ -65,12 +65,15 @@ func CreateStory(userID, content, bgColor string, imageFile io.ReadCloser, filen
 
 	var imagePath string
 	if imageFile != nil && filename != "" {
+		if size >= maxFileSize {
+			return "",  errors.New("size of file bigg")
+		}
 		defer imageFile.Close()
 
 		ext := filepath.Ext(filename)
 
 		allowedExts := map[string]bool{
-			".jpg": true, ".jpeg": true, ".png": true, ".gif": true,
+			".jpg": true, ".jpeg": true, ".png": true, ".gif": true, "webp": true,
 		}
 
 		if !allowedExts[ext] {

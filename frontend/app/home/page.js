@@ -117,7 +117,17 @@ export default function Home() {
 
 
   function handleImageChange(e) {
-    setImage(e.target.files[0]);
+  
+    if (e.target.files[0]?.size<= 2 * 1024 * 1024){
+
+      if (e.target.files[0]?.type){
+        if (e.target.files[0]?.type.split('/')[0] =='image' )
+          setImage(e.target.files[0]);
+      }
+    }else{
+      setImage(null)
+      showToast('file too large')
+    }
   }
   async function Handlelik(postId) {
     try {
@@ -231,7 +241,10 @@ export default function Home() {
       setLoading(true);
       const formData = new FormData();
       formData.append("title", title);
-      if (image) formData.append("image", image);
+      if (image) {
+         formData.append("image", image);
+        
+      }
       formData.append("content", content);
       formData.append("visibility", visibility);
 

@@ -71,23 +71,53 @@ export default function ChatBox({ user }) {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) {
+
       setPreview(null);
       return;
     }
+    console.log(file.type,file.size);
+    
 
     const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif", "image/webp"];
-    if (!allowedTypes.includes(file.type)) {
-      showToast("Only image files are allowed!")
+    if (!allowedTypes.includes(file.type )|| file.size>= 1024*1024*30 ) {
+      showToast("Only image files are allowed! || big size")
       e.target.value = "";
       setPreview(null);
       return;
     }
 
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setPreview(reader.result);
-    };
+   const reader = new FileReader();
+
+reader.onload = () => {
+  const arr = new Uint8Array(reader.result);
+
+  const isPng  = arr[0] === 0x89 && arr[1] === 0x50 && arr[2] === 0x4E && arr[3] === 0x47;
+  const isJpeg = arr[0] === 0xFF && arr[1] === 0xD8 && arr[2] === 0xFF;
+  const isGif  = arr[0] === 0x47 && arr[1] === 0x49 && arr[2] === 0x46;
+  const isWebP = arr[0] === 0x52 && arr[1] === 0x49 && arr[2] === 0x46 && arr[3] === 0x46 && arr[8] === 0x57 && arr[9] === 0x45 && arr[10] === 0x42 && arr[11] === 0x50;
+  const isBmp  = arr[0] === 0x42 && arr[1] === 0x4D;
+  const isTiff = (arr[0] === 0x49 && arr[1] === 0x49 && arr[2] === 0x2A && arr[3] === 0x00) ||
+                 (arr[0] === 0x4D && arr[1] === 0x4D && arr[2] === 0x00 && arr[3] === 0x2A);
+
+  if (!isPng && !isJpeg && !isGif && !isWebP && !isBmp && !isTiff) {
+    showToast('is not a image ')
+    e.target.value = "";
+    setPreview(null);
+    return;
+  }
+
+  const previewReader = new FileReader();
+  previewReader.onloadend = () => setPreview(previewReader.result);
+  previewReader.readAsDataURL(file);
+};
+
+reader.onerror = () => {
+  showToast('erroor in image')
+  e.target.value = "";
+  setPreview(null);
+};
+
+reader.readAsArrayBuffer(file); 
   };
 
 
@@ -185,6 +215,7 @@ export default function ChatBox({ user }) {
       showToast("message is too long")
       return
     }
+    
     const payload = {
       receiverId: user.id,
       messageContent: input,

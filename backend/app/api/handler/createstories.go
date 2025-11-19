@@ -33,13 +33,15 @@ func CreateStories(w http.ResponseWriter, r *http.Request) {
 
 	var file io.ReadCloser
 	var filename string
+	var size int64
 	imgFile, imgHeader, imgErr := r.FormFile("image")
 	if imgErr == nil {
 		file = imgFile
 		filename = imgHeader.Filename
+		size = imgHeader.Size
 	}
 
-	imagePath, err := service.CreateStory(userID, content, bgColor, file, filename)
+	imagePath, err := service.CreateStory(userID, content, bgColor, file, filename,size)
 	if err != nil {
 		helper.RespondWithError(w, http.StatusBadRequest, err.Error())
 		return

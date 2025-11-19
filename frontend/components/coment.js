@@ -131,11 +131,16 @@ export default function Comment({ comments, isOpen, onClose, postId, onCommentCh
   }, [scrollPos])
 
   const handleFileSelect = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      setSelectedFile(file)
+   if (e.target.files[0]?.size<= 2 * 1024 * 1024){
+
+      if (e.target.files[0]?.type){
+        if (e.target.files[0]?.type.split('/')[0] =='image' )
+          setSelectedFile(e.target.files[0]);
+      }
+    }else{
+      setSelectedFile(null)
+      showToast('file too large')
     }
-    e.target.value = ''
   }
 
   const handleRemoveFile = () => {

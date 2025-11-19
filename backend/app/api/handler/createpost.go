@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -22,6 +23,7 @@ func Createpost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := r.ParseMultipartForm(10 << 20); err != nil {
+		fmt.Println(err)
 		helper.RespondWithError(w, http.StatusBadRequest, "Unable to parse form")
 		return
 	}
