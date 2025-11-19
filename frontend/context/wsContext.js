@@ -68,8 +68,17 @@ export function WSProvider({ children }) {
 
   const sendMessage = async (msg) => {
     try {
-      if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-        ws.current.send(JSON.stringify(msg));
+      const res = await fetch(`http://localhost:8080/api/me`, {
+        method: "GET",
+        credentials: "include",
+      });
+      console.log(res);
+      
+      if (res.ok){
+
+        if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+          ws.current.send(JSON.stringify(msg));
+        }
       }
 
     } catch (err) {

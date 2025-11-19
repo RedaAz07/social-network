@@ -48,7 +48,7 @@ func CreateComment(userID, postID, content, whatis, groupID string, mediaFileHea
 		ext := strings.ToLower(filepath.Ext(filename))
 		allowedExts := map[string]bool{
 			".jpg": true, ".jpeg": true, ".png": true, ".gif": true,
-			".mp4": true, ".mov": true, ".avi": true, ".webm" :true, "webp":true,
+			".mp4": true, ".mov": true, ".avi": true, ".webm" :true, ".webp":true,
 		}
 		if !allowedExts[ext] {
 			return "", "", errors.New("unsupported media format")

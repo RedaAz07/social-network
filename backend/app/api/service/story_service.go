@@ -73,7 +73,7 @@ func CreateStory(userID, content, bgColor string, imageFile io.ReadCloser, filen
 		ext := filepath.Ext(filename)
 
 		allowedExts := map[string]bool{
-			".jpg": true, ".jpeg": true, ".png": true, ".gif": true, "webp": true,
+			".jpg": true, ".jpeg": true, ".png": true, ".gif": true, ".webp": true,
 		}
 
 		if !allowedExts[ext] {

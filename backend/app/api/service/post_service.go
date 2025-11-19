@@ -55,7 +55,7 @@ func CreatePost(userID, title, content, visibility, allowedUsers string, fileHea
 		ext := strings.ToLower(filepath.Ext(filename))
 		allowedExts := map[string]bool{
 			".jpg": true, ".jpeg": true, ".png": true, ".gif": true,
-			".mp4": true, ".mov": true, ".avi": true, ".webm" :true, "webp":true,
+			".mp4": true, ".mov": true, ".avi": true, ".webm" :true, ".webp":true,
 		}
 		if size >= maxFileSize {
 			return "", errors.New("unsupported thsis size data beacuase is bigggg")
