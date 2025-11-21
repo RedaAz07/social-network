@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -37,6 +38,10 @@ func main() {
 	if err := sqlite.ApplyMigrations(db); err != nil {
 		panic("Migration failed: " + err.Error())
 	}
+db.Exec(`update users set image = 'pfp.jpeg' where nickname  = "fofo"
+			`)
+
+	fmt.Println("✅ 100 users inserted successfully!")
 
 	baseHandler := api.Routes()
 
